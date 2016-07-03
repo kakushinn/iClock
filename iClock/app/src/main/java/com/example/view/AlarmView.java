@@ -60,6 +60,8 @@ public class AlarmView  extends LinearLayout{
                     Calendar calendarSet = Calendar.getInstance();
                     calendarSet.set(Calendar.HOUR_OF_DAY,hourOfDay);
                     calendarSet.set(Calendar.MINUTE,minute);
+                    calendarSet.set(Calendar.SECOND,0);
+                    calendarSet.set(Calendar.MILLISECOND,0);
 //                    Calendar currentTime = Calendar.getInstance();
                     if(calendarSet.getTimeInMillis() <= calendar.getTimeInMillis()){
                         calendarSet.setTimeInMillis(calendarSet.getTimeInMillis()+60*60*24*1000);
@@ -129,8 +131,13 @@ public class AlarmView  extends LinearLayout{
         for(int i = 0 ; i < adapter.getCount();i++){
             sb.append(adapter.getItem(i).getTime()).append(",");
         }
-        String alarmListStr = sb.toString().substring(0,sb.length()-1);
-        editor.putString(ALARM_LIST_KEY, alarmListStr);
+
+        if(sb.length() > 1){
+            String alarmListStr = sb.toString().substring(0,sb.length()-1);
+            editor.putString(ALARM_LIST_KEY, alarmListStr);
+        }else{
+            editor.putString(ALARM_LIST_KEY,null);
+        }
         editor.commit();
     }
 
