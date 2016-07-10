@@ -66,8 +66,12 @@ public class AlarmView  extends LinearLayout{
                     if(calendarSet.getTimeInMillis() <= calendar.getTimeInMillis()){
                         calendarSet.setTimeInMillis(calendarSet.getTimeInMillis()+60*60*24*1000);
                     }
-                    adapter.add(new AlarmDate(calendarSet.getTimeInMillis()));
-                    alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, calendarSet.getTimeInMillis(), 1000 * 60, PendingIntent.getBroadcast(getContext(),0,new Intent(getContext(),AlarmReceiver.class),0));
+                    AlarmDate ad = new AlarmDate(calendarSet.getTimeInMillis());
+                    adapter.add(ad);
+                    alarmManager.setRepeating(AlarmManager.RTC_WAKEUP,
+                            ad.getTime(),
+                            1000 * 60,
+                            PendingIntent.getBroadcast(getContext(), ad.getId(), new Intent(getContext(),AlarmReceiver.class),0));
                     saveAlarmList();
                     flag = false;
                 }else{
@@ -121,8 +125,10 @@ public class AlarmView  extends LinearLayout{
     }
 
     private void deleteAlarm(int position){
-        adapter.remove(adapter.getItem(position));
+        AlarmDate ad = adapter.getItem(position);
+        adapter.remove(ad);
         saveAlarmList();
+        alarmManager.cancel(PendingIntent.getBroadcast(getContext(), ad.getId(), new Intent(getContext(),AlarmReceiver.class),0));
     }
 
     private void saveAlarmList(){
@@ -176,6 +182,11 @@ public class AlarmView  extends LinearLayout{
         @Override
         public String toString() {
             return getTimeLable();
+        }
+
+        public int getId()
+        {
+            return  (int)(getTime()/1000/60);
         }
     }
 }

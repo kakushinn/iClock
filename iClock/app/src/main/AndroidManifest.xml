@@ -20,6 +20,11 @@
         </activity>
         <receiver android:name="com.example.broadcast.AlarmReceiver">
     </receiver>
+        <activity
+            android:name=".PlayAlarmActivity"
+            android:screenOrientation="portrait">
+
+        </activity>
     </application>
 
 </manifest>
